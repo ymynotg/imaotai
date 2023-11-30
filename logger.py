@@ -10,6 +10,9 @@ def log():
         #创建handler
         fh = logging.FileHandler(f'{ datetime.date.today().strftime("%Y%m%d")}.log',encoding="utf-8")
         ch = logging.StreamHandler()
+        
+        fh.setLevel(logging.DEBUG)
+        ch.setLevel(logging.WARNING)
 
         #设置输出日志格式
         formatter = logging.Formatter(
