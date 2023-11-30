@@ -9,7 +9,8 @@ import config
 from encrypt import Encrypt
 import requests
 import hashlib
-import logging
+#import logging
+import logger
 
 AES_KEY = 'qbhajinldepmucsonaaaccgypwuvcjaa'
 AES_IV = '2018534749963515'
@@ -17,7 +18,7 @@ SALT = '2af72f100c356273d46284f6fd1dfc08'
 
 CURRENT_TIME = str(int(time.time() * 1000))
 headers = {}
-
+logger = logger.log()
 '''
 # 获取茅台APP的版本号，暂时没找到接口，采用爬虫曲线救国
 # 用bs获取指定的class更稳定，之前的正则可能需要经常改动
@@ -101,7 +102,7 @@ def get_vcode(mobile: str):
     responses = requests.post("https://app.moutai519.com.cn/xhr/front/user/register/vcode", json=params,
                               headers=headers)
     if responses.status_code != 200:
-        logging.info(
+        logger.info(
             f'get v_code : params : {params}, response code : {responses.status_code}, response body : {responses.text}')
 
 
@@ -113,7 +114,7 @@ def login(mobile: str, v_code: str):
     responses = requests.post("https://app.moutai519.com.cn/xhr/front/user/register/login", json=params,
                               headers=headers)
     if responses.status_code != 200:
-        logging.info(
+        logger.info(
             f'login : params : {params}, response code : {responses.status_code}, response body : {responses.text}')
     dict.update(headers, {'MT-Token': responses.json()['data']['token']})
     dict.update(headers, {'userId': responses.json()['data']['userId']})
@@ -129,7 +130,7 @@ def get_current_session_id():
     responses = requests.get(my_url)
     # print(responses.json())
     if responses.status_code != 200:
-        logging.warning(
+        logger.warning(
             f'get_current_session_id : params : {day_time}, response code : {responses.status_code}, response body : {responses.text}')
     current_session_id = responses.json()['data']['sessionId']
     dict.update(headers, {'current_session_id': str(current_session_id)})
@@ -148,7 +149,7 @@ def get_location_count(province: str,
     responses = requests.get(
         f"https://static.moutai519.com.cn/mt-backend/xhr/front/mall/shop/list/slim/v3/{session_id}/{province}/{item_code}/{day_time}")
     if responses.status_code != 200:
-        logging.warning(
+        logger.warning(
             f'get_location_count : params : {day_time}, response code : {responses.status_code}, response body : {responses.text}')
     shops = responses.json()['data']['shops']
 
@@ -210,7 +211,7 @@ def max_shop(city, item_code, p_c_map, province, shops):
             if item['inventory'] > max_count:
                 max_count = item['inventory']
                 max_shop_id = shopId
-    logging.debug(f'item code {item_code}, max shop id : {max_shop_id}, max count : {max_count}')
+    logger.debug(f'item code {item_code}, max shop id : {max_shop_id}, max count : {max_count}')
     return max_shop_id
 
 
@@ -250,7 +251,7 @@ def send_msg(title, content):
     r = requests.get(url, params={'token': config.PUSH_TOKEN,
                                   'title': title,
                                   'content': content})
-    logging.info(f'通知推送结果：{r.status_code, r.text}')
+    logger.info(f'通知推送结果：{r.status_code, r.text}')
 
 
 # 核心代码，执行预约
@@ -263,7 +264,7 @@ def reservation(params: dict, mobile: str):
     #     raise RuntimeError
 
     msg = f'预约:{mobile};Code:{responses.status_code};Body:{responses.text};'
-    logging.info(msg)
+    logger.info(msg)
 
     # 如果是成功，推送消息简化；失败消息则全量推送
     if responses.status_code == 200:
@@ -279,7 +280,7 @@ def reservation(params: dict, mobile: str):
 def select_geo(i: str):
     # 校验高德api是否配置
     if config.AMAP_KEY is None:
-        logging.error("!!!!请配置config.py中AMAP_KEY(高德地图的MapKey)")
+        logger.error("!!!!请配置config.py中AMAP_KEY(高德地图的MapKey)")
         raise ValueError
     resp = requests.get(f"https://restapi.amap.com/v3/geocode/geo?key={config.AMAP_KEY}&output=json&address={i}")
     geocodes: list = resp.json()['geocodes']
@@ -334,5 +335,4 @@ def getUserEnergyAward(mobile: str):
     response = requests.post('https://h5.moutai519.com.cn/game/isolationPage/getUserEnergyAward', cookies=cookies,
                              headers=headers, json={})
     # response.json().get('message') if '无法领取奖励' in response.text else "领取奖励成功"
-    logging.info(
-        f'领取耐力 : mobile:{mobile} :  response code : {response.status_code}, response body : {response.text}')
+    logger.info(f'领取耐力 : mobile:{mobile} :  response code : {response.status_code}, response body : {response.text}')

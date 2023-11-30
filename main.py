@@ -1,5 +1,6 @@
 import datetime
-import logging
+#import logging
+import logger
 import sys
 
 import config
@@ -9,11 +10,15 @@ import privateCrypt
 
 DATE_FORMAT = "%m/%d/%Y %H:%M:%S %p"
 TODAY = datetime.date.today().strftime("%Y%m%d")
+logger = logger.log()
+
+'''
+
 logging.basicConfig(level=logging.INFO,
                     format='%(asctime)s  %(filename)s : %(levelname)s  %(message)s',  # 定义输出log的格式
                     stream=sys.stdout,
                     datefmt=DATE_FORMAT)
-
+'''
 print(r'''
 **************************************
     欢迎使用i茅台自动预约工具
@@ -27,7 +32,7 @@ process.get_current_session_id()
 # 校验配置文件是否存在
 configs = login.config
 if len(configs.sections()) == 0:
-    logging.error("配置文件未找到配置")
+    logger.error("配置文件未找到配置")
     sys.exit(1)
 
 aes_key = privateCrypt.get_aes_key()
@@ -67,7 +72,7 @@ for section in configs.sections():
             shop_info = source_data.get(str(max_shop_id))
             title = config.ITEM_MAP.get(item)
             shopInfo = f'商品:{title};门店:{shop_info["name"]}'
-            logging.info(shopInfo)
+            logger.debug(shopInfo)
             reservation_params = process.act_params(max_shop_id, item)
             # 核心预约步骤
             r_success, r_content = process.reservation(reservation_params, mobile)
@@ -79,7 +84,7 @@ for section in configs.sections():
             process.getUserEnergyAward(mobile)
     except BaseException as e:
         print(e)
-        logging.error(e)
+        logger.error(e)
 
 # 推送消息
 process.send_msg(s_title, s_content)
