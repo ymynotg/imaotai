@@ -12,7 +12,7 @@ def log():
         ch = logging.StreamHandler()
         
         fh.setLevel(logging.DEBUG)
-        ch.setLevel(logging.WARNING)
+        ch.setLevel(logging.INFO)
 
         #设置输出日志格式
         formatter = logging.Formatter(
@@ -22,10 +22,7 @@ def log():
         #为handler指定输出格式
         fh.setFormatter(formatter)
         #ch.setFormatter(formatter)
-        '''
-        ch.setLevel(logging.WARNING)
-        fh.setLevel(logging.DEBUG)
-        '''
+    
 
         #为logger添加的日志处理器
         logger.addHandler(fh)
