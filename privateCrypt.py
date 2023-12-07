@@ -3,8 +3,10 @@ from Crypto.Cipher import AES
 from Crypto.Util.Padding import pad, unpad
 from hashlib import sha256
 import config
-import logging
+#import logging
+import logger
 
+logger = logger.log()
 
 def get_aes_key():
     """
@@ -13,7 +15,7 @@ def get_aes_key():
     """
     private_key = config.PRIVATE_AES_KEY  # 你的私钥
     if private_key is None:
-        logging.error("!!!!请配置config.py中PRIVATE_AES_KEY(AES的私钥)")
+        logger.error("!!!!请配置config.py中PRIVATE_AES_KEY(AES的私钥)")
         raise ValueError
     private_key_b = sha256(private_key.encode()).digest()  # 使用SHA-256算法生成一个32字节的密钥
     return private_key_b

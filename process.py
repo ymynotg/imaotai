@@ -104,6 +104,11 @@ def get_vcode(mobile: str):
     if responses.status_code != 200:
         logger.info(
             f'get v_code : params : {params}, response code : {responses.status_code}, response body : {responses.text}')
+    else:
+        logger.debug(
+            f'get v_code : params : {params}, response code : {responses.status_code}, response body : {responses.text}')
+            
+    
 
 
 # 执行登录操作
@@ -116,8 +121,16 @@ def login(mobile: str, v_code: str):
     if responses.status_code != 200:
         logger.info(
             f'login : params : {params}, response code : {responses.status_code}, response body : {responses.text}')
+    else:
+        logger.debug(
+            f'login : params : {params}, response code : {responses.status_code}, response body : {responses.text}')
     dict.update(headers, {'MT-Token': responses.json()['data']['token']})
     dict.update(headers, {'userId': responses.json()['data']['userId']})
+    
+    
+    result =responses.json()['data']['token'], responses.json()['data']['userId']
+    logger.debug(result)
+
     return responses.json()['data']['token'], responses.json()['data']['userId']
 
 
@@ -259,6 +272,7 @@ def reservation(params: dict, mobile: str):
     params.pop('userId')
     responses = requests.post("https://app.moutai519.com.cn/xhr/front/mall/reservation/add", json=params,
                               headers=headers)
+    logger.debug(f'https://app.moutai519.com.cn/xhr/front/mall/reservation/add", json={params},headers={headers}')
     # if responses.status_code == 401:
     #     send_msg('！！失败！！茅台预约', f'[{mobile}],登录token失效，需要重新登录')
     #     raise RuntimeError
