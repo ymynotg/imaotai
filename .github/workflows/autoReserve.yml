@@ -8,6 +8,7 @@ on:
     branches: [ "master" ]
     paths:
       - '.github/workflows/**'
+ #在每天 0:20 和 1:20 UTC 触发工作流程：
   schedule:
     - cron: '20 0,1 * * *'
 
