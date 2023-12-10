@@ -137,7 +137,7 @@ def login(mobile: str, v_code: str):
 # 获取当日的session id
 def get_current_session_id():
     # print("===============get_current_session_id")
-    day_time = int(time.mktime(datetime.date.today().timetuple())-3600*8) * 1000
+    day_time = int(time.mktime(datetime.date.today().timetuple())) * 1000
     my_url = f"https://static.moutai519.com.cn/mt-backend/xhr/front/mall/index/session/get/{day_time}"
     # print(my_url)
     responses = requests.get(my_url)
@@ -157,7 +157,7 @@ def get_location_count(province: str,
                        source_data: dict,
                        lat: str = '29.83826',
                        lng: str = '102.182324'):
-    day_time = int(time.mktime(datetime.date.today().timetuple())-3600*8) * 1000
+    day_time = int(time.mktime(datetime.date.today().timetuple())) * 1000
     session_id = headers['current_session_id']
     responses = requests.get(
         f"https://static.moutai519.com.cn/mt-backend/xhr/front/mall/shop/list/slim/v3/{session_id}/{province}/{item_code}/{day_time}")
@@ -274,7 +274,7 @@ def reservation(params: dict, mobile: str):
                               headers=headers)
     logger.debug(f'https://app.moutai519.com.cn/xhr/front/mall/reservation/add", json={params},headers={headers}')
     # if responses.status_code == 401:
-    #     send_msg('！！失败！！茅台预约', f'[{mobile}],登录token失效，需要重新登录')
+    #     send_msg('！！消息！！茅台预约', f'[{mobile}],登录token失效，需要重新登录')
     #     raise RuntimeError
 
     msg = f'预约:{mobile};Code:{responses.status_code};Body:{responses.text};'
