@@ -50,6 +50,7 @@ jobs:
           PRIVATE_AES_KEY: ${{ secrets.PRIVATE_AES_KEY }}
         run: |
           python main.py
+          echo "Current time is $(date)"
 
 #        pip install flake8 pytest
 #        if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
