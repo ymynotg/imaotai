@@ -11,7 +11,7 @@ on:
  #在每天 0:02 和 1:02 UTC 触发工作流程：
  #调试1 1,23
   schedule:
-    - cron: '1 23 * * *'
+    - cron: '30 * * * *'
 
 env:
   TZ: Asia/Shanghai
