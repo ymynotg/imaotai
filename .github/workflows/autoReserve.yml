@@ -9,7 +9,7 @@ on:
     paths:
       - '.github/workflows/**'
  #在每天 0:02 和 1:02 UTC 触发工作流程：
- #调试1 1,23
+
   schedule:
     - cron: '1,29,50 13,14,1,0,23 * * *'
 
