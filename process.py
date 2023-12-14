@@ -17,6 +17,10 @@ AES_IV = '2018534749963515'
 SALT = '2af72f100c356273d46284f6fd1dfc08'
 
 CURRENT_TIME = str(int(time.time() * 1000))
+# i茅台需要的数据为从1970-01-01 08:00:00到当天零点所经过的秒数，部分平台环境的返回结果多八个小时，
+# 通过算法规避此问题。
+day_time = (int(time.mktime(datetime.date.today().timetuple())) * 1000+8*3600*1000)//(24*3600*1000)*(24*3600*1000)-8*3600*1000
+
 headers = {}
 logger = logger.log()
 '''
@@ -137,14 +141,14 @@ def login(mobile: str, v_code: str):
 # 获取当日的session id
 def get_current_session_id():
     # print("===============get_current_session_id")
-    day_time = int(time.mktime(datetime.date.today().timetuple())) * 1000
+    # day_time = int(time.mktime(datetime.date.today().timetuple())) * 1000
     my_url = f"https://static.moutai519.com.cn/mt-backend/xhr/front/mall/index/session/get/{day_time}"
     # print(my_url)
     responses = requests.get(my_url)
     # print(responses.json())
     if responses.status_code != 200:
         logger.warning(
-            f'get_current_session_id : params : {day_time}, response code : {responses.status_code}, response body : {responses.text}')
+            f'get_current_session_id : url ：{my_url} ，params : {day_time}, response code : {responses.status_code}, response body : {responses.text}')
     else:
         logger.debug(
             f'get_current_session_id : params : {day_time}, response code : {responses.status_code}, response body : {responses.text}')
@@ -160,7 +164,7 @@ def get_location_count(province: str,
                        source_data: dict,
                        lat: str = '29.83826',
                        lng: str = '102.182324'):
-    day_time = int(time.mktime(datetime.date.today().timetuple())) * 1000
+    # day_time = int(time.mktime(datetime.date.today().timetuple())) * 1000
     session_id = headers['current_session_id']
     responses = requests.get(
         f"https://static.moutai519.com.cn/mt-backend/xhr/front/mall/shop/list/slim/v3/{session_id}/{province}/{item_code}/{day_time}")
