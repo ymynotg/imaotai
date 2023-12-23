@@ -8,8 +8,10 @@ on:
     branches: [ "master" ]
     paths:
       - '.github/workflows/**'
+ #在0:0\0:31\0:59;1:0\1:31\1:59UTC 触发工作流程：实际到2点十几分才触发一次。
+
   schedule:
-    - cron: '20 0,1 * * *'
+    - cron: '0,31,59 0,1 * * *'
 
 env:
   TZ: Asia/Shanghai
@@ -49,6 +51,7 @@ jobs:
           PRIVATE_AES_KEY: ${{ secrets.PRIVATE_AES_KEY }}
         run: |
           python main.py
+          echo "Current time is $(date)"
 
 #        pip install flake8 pytest
 #        if [ -f requirements.txt ]; then pip install -r requirements.txt; fi

@@ -21,7 +21,7 @@ def log():
             )
         #为handler指定输出格式
         fh.setFormatter(formatter)
-        #ch.setFormatter(formatter)
+        ch.setFormatter(formatter)
     
 
         #为logger添加的日志处理器
